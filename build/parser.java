@@ -29,7 +29,9 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\002\000\002\002\015\000\002\002\004" });
+    "\000\007\000\002\002\016\000\002\002\004\000\002\003" +
+    "\010\000\002\004\012\000\002\005\015\000\002\006\006" +
+    "\000\002\007\007" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -37,13 +39,14 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\016\000\004\007\005\001\002\000\004\002\020\001" +
-    "\002\000\004\041\006\001\002\000\004\057\007\001\002" +
-    "\000\004\073\010\001\002\000\004\043\011\001\002\000" +
-    "\004\073\012\001\002\000\004\015\013\001\002\000\004" +
-    "\035\014\001\002\000\004\043\015\001\002\000\004\073" +
-    "\016\001\002\000\004\027\017\001\002\000\004\002\001" +
-    "\001\002\000\004\002\000\001\002" });
+    "\000\017\000\004\007\004\001\002\000\004\041\007\001" +
+    "\002\000\004\002\006\001\002\000\004\002\000\001\002" +
+    "\000\004\057\010\001\002\000\004\073\011\001\002\000" +
+    "\004\043\012\001\002\000\004\073\013\001\002\000\004" +
+    "\015\014\001\002\000\004\035\015\001\002\000\004\043" +
+    "\016\001\002\000\004\073\017\001\002\000\004\027\020" +
+    "\001\002\000\004\040\021\001\002\000\004\002\001\001" +
+    "\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -51,11 +54,11 @@ public class parser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\016\000\004\002\003\001\001\000\002\001\001\000" +
+    "\000\017\000\004\002\004\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001" });
+    "\000\002\001\001\000\002\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -118,16 +121,16 @@ class CUP$parser$actions {
       switch (CUP$parser$act_num)
         {
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 0: // mientras ::= bucleCONTADOR parIZQ tipoDatoNUM ID puntoCOMA ID COMPARACION NUMERO puntoCOMA ID INCREDECRE 
+          case 0: // bucle ::= bucleCONTADOR parIZQ tipoDatoNUM ID puntoCOMA ID COMPARACION NUMERO puntoCOMA ID INCREDECRE parDER 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("mientras",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-10)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("bucle",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-11)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 1: // $START ::= mientras EOF 
+          case 1: // $START ::= bucle EOF 
             {
               Object RESULT =null;
 		int start_valleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
@@ -138,6 +141,51 @@ class CUP$parser$actions {
             }
           /* ACCEPT */
           CUP$parser$parser.done_parsing();
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 2: // listas ::= tipoDatoLista corIZQ corDER ASIGNACION corIZQ corDER 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("listas",1, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 3: // mientras ::= preguntaCONDICIONAL parIZQ ID COMPARACION NUMERO parDER corIZQ corDER 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("mientras",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 4: // pregunton ::= preguntaCONDICIONAL parIZQ ID COMPARACION NUMERO parDER corIZQ corDER sinoCONDICIONAL corIZQ corDER 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("pregunton",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-10)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 5: // variableEntero ::= tipoDatoNUM ID ASIGNACION NUMERO 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("variableEntero",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 6: // clase ::= VISIBILIDAD CLASS ID corIZQ corDER 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("clase",5, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
           return CUP$parser$result;
 
           /* . . . . . .*/

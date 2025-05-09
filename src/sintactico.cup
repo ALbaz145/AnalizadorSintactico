@@ -7,7 +7,27 @@ siguienteCICLO, sinoCONDICIONAL, tipoDatoArregloCorte, tipoDatoBool, tipoDatoByt
 tipoDatoLista, tipoDatoNUM, tipoDatoNumDecimal, tipoDatoNUMERO, tipoDatoSET, tipoDatoSetInmu, tipoDatoSimbolo, tipoDatoTEXT,
 tipoDatoTupla, tipoDatoVARIABLE, tomaARCHIVO, VISIBILIDAD, VOID, ID;
 
+non terminal bucle;
+non terminal listas;
 non terminal mientras;
+non terminal pregunton;
+non terminal variableEntero;
+non terminal clase;
+
+bucle ::=
+    bucleCONTADOR parIZQ tipoDatoNUM ID puntoCOMA ID COMPARACION NUMERO puntoCOMA ID INCREDECRE parDER;
+
+listas ::=
+    tipoDatoLista corIZQ corDER ASIGNACION corIZQ corDER;
 
 mientras ::=
-    bucleCONTADOR parIZQ tipoDatoNUM ID puntoCOMA ID COMPARACION NUMERO puntoCOMA ID INCREDECRE;
+    preguntaCONDICIONAL parIZQ ID COMPARACION NUMERO parDER corIZQ corDER;
+
+pregunton ::=
+    preguntaCONDICIONAL parIZQ ID COMPARACION NUMERO parDER corIZQ corDER sinoCONDICIONAL corIZQ corDER;
+
+variableEntero ::= 
+    tipoDatoNUM ID ASIGNACION NUMERO;
+
+clase ::=
+    VISIBILIDAD CLASS ID corIZQ corDER;
