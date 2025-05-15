@@ -129,4 +129,7 @@ NUMERO = {DIGITO}+
 
 {ESPACIO} { /* Se ignoran */ }
 
-.       { System.err.println("Error: Caracter no válido '" + yytext() + "'"); }
+.       {
+    System.err.println("Error léxico en línea " + (yyline + 1) + ", columna " + (yycolumn + 1) + ": Caracter no válido '" + yytext() + "'");
+    throw new Error("Token inválido");
+}

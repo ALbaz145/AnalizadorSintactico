@@ -1206,7 +1206,8 @@ public class lexico implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { System.err.println("Error: Caracter no válido '" + yytext() + "'");
+            { System.err.println("Error léxico en línea " + (yyline + 1) + ", columna " + (yycolumn + 1) + ": Caracter no válido '" + yytext() + "'");
+    throw new Error("Token inválido");
             }
           // fall through
           case 59: break;
