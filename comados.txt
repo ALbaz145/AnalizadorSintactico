@@ -1,0 +1,11 @@
+java -jar .\lib\jflex-full-1.9.1.jar .\src\lexico.flex -d .\build\
+
+java -jar .\lib\java-cup-11b.jar -parser parser -symbols sym -destdir build .\src\sintactico.cup
+
+javac -cp .\lib\java-cup-11b.jar .\build\*.java -d .\out\
+
+java -cp "out/;lib/java-cup-11b.jar" Main
+
+
+
+
