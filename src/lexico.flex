@@ -69,7 +69,9 @@ NUMERO = {DIGITO}+
 
 "(" {return new Symbol(sym.parIZQ);}
 
-"if" | "If" | "IF" | "while" | "While" | "WHILE" {return new Symbol(sym.preguntaCONDICIONAL);}
+"if" | "If" | "IF" {return new Symbol(sym.preguntaCONDICIONAL);}
+
+"while" | "While" | "WHILE" {return new Symbol(sym.preguntaWHILE);} 
 
 ";" {return new Symbol(sym.puntoCOMA);}
 

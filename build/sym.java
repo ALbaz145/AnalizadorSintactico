@@ -6,64 +6,65 @@
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int VISIBILIDAD = 55;
+  public static final int VISIBILIDAD = 56;
   public static final int NUMERO = 27;
-  public static final int tomaARCHIVO = 54;
+  public static final int tomaARCHIVO = 55;
   public static final int casoCONDICIONAL = 6;
-  public static final int tipoDatoLista = 44;
-  public static final int tipoDatoNumDecimal = 46;
-  public static final int seleccionCONDICIONAL = 35;
-  public static final int tipoDatoByte = 40;
+  public static final int tipoDatoLista = 45;
+  public static final int tipoDatoNumDecimal = 47;
+  public static final int seleccionCONDICIONAL = 36;
+  public static final int tipoDatoByte = 41;
   public static final int muestraTEXTO = 26;
-  public static final int siguienteCICLO = 36;
-  public static final int puntoCOMA = 33;
-  public static final int sinoCONDICIONAL = 37;
+  public static final int siguienteCICLO = 37;
+  public static final int puntoCOMA = 34;
+  public static final int sinoCONDICIONAL = 38;
   public static final int dosPUNTOS = 17;
-  public static final int rompeCONDICIONAL = 34;
+  public static final int rompeCONDICIONAL = 35;
   public static final int corDER = 13;
   public static final int llaveIZQ = 24;
   public static final int ESPERA = 20;
   public static final int bucleCONTADOR = 5;
-  public static final int tipoDatoVARIABLE = 53;
-  public static final int tipoDatoSimbolo = 50;
-  public static final int tipoDatoNUM = 45;
+  public static final int tipoDatoVARIABLE = 54;
+  public static final int tipoDatoSimbolo = 51;
+  public static final int tipoDatoNUM = 46;
   public static final int intentaERROR = 22;
   public static final int parIZQ = 31;
   public static final int CLASS = 8;
-  public static final int tipoDatoCaracter = 41;
+  public static final int tipoDatoCaracter = 42;
   public static final int defineESTRUCTURA = 15;
   public static final int ELIMINA = 18;
   public static final int ARITMETICOS = 2;
-  public static final int ID = 57;
+  public static final int ID = 58;
   public static final int manejaERROR = 25;
   public static final int EOF = 0;
   public static final int error = 1;
   public static final int COMILLA = 10;
   public static final int NULO = 28;
   public static final int COMA = 9;
-  public static final int tipoDatoArregloCorte = 38;
+  public static final int tipoDatoArregloCorte = 39;
   public static final int controlBUCLE = 12;
-  public static final int VOID = 56;
+  public static final int VOID = 57;
   public static final int ASIGNACION = 3;
   public static final int EMOJI = 19;
   public static final int llaveDER = 23;
-  public static final int tipoDatoENUM = 42;
+  public static final int tipoDatoENUM = 43;
   public static final int operLOGICOS = 29;
   public static final int defineFUNCION = 16;
-  public static final int tipoDatoTupla = 52;
+  public static final int tipoDatoTupla = 53;
   public static final int parDER = 30;
-  public static final int tipoDatoSetInmu = 49;
-  public static final int tipoDatoBool = 39;
+  public static final int tipoDatoSetInmu = 50;
+  public static final int tipoDatoBool = 40;
   public static final int corIZQ = 14;
-  public static final int tipoDatoTEXT = 51;
-  public static final int tipoDatoNUMERO = 47;
+  public static final int tipoDatoTEXT = 52;
+  public static final int tipoDatoNUMERO = 48;
   public static final int BOOLEANO = 4;
   public static final int COMPARACION = 11;
-  public static final int tipoDatoINMU = 43;
+  public static final int tipoDatoINMU = 44;
   public static final int CHECADOR = 7;
   public static final int preguntaCONDICIONAL = 32;
-  public static final int tipoDatoSET = 48;
+  public static final int tipoDatoSET = 49;
   public static final int INCREDECRE = 21;
+  public static final int preguntaWHILE = 33;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -98,6 +99,7 @@ public class sym {
   "parDER",
   "parIZQ",
   "preguntaCONDICIONAL",
+  "preguntaWHILE",
   "puntoCOMA",
   "rompeCONDICIONAL",
   "seleccionCONDICIONAL",

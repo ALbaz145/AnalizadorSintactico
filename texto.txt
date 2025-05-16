@@ -1,1 +1,1 @@
-for(int i; i < 10; i++)
+public class myclase {int x = 5;}

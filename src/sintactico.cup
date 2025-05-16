@@ -1,33 +1,59 @@
-import java_cup.runtime.Symbol;
+import java_cup.runtime.*;
 
 terminal ARITMETICOS, ASIGNACION, BOOLEANO, bucleCONTADOR, casoCONDICIONAL, CHECADOR, CLASS, COMA, COMILLA, COMPARACION, controlBUCLE,
 corDER, corIZQ, defineESTRUCTURA, defineFUNCION, dosPUNTOS, ELIMINA, EMOJI, ESPERA, INCREDECRE, intentaERROR, llaveDER, llaveIZQ,
-manejaERROR, muestraTEXTO, NUMERO, NULO, operLOGICOS, parDER, parIZQ, preguntaCONDICIONAL, puntoCOMA, rompeCONDICIONAL, seleccionCONDICIONAL,
+manejaERROR, muestraTEXTO, NUMERO, NULO, operLOGICOS, parDER, parIZQ, preguntaCONDICIONAL, preguntaWHILE, puntoCOMA, rompeCONDICIONAL, seleccionCONDICIONAL,
 siguienteCICLO, sinoCONDICIONAL, tipoDatoArregloCorte, tipoDatoBool, tipoDatoByte, tipoDatoCaracter, tipoDatoENUM, tipoDatoINMU,
 tipoDatoLista, tipoDatoNUM, tipoDatoNumDecimal, tipoDatoNUMERO, tipoDatoSET, tipoDatoSetInmu, tipoDatoSimbolo, tipoDatoTEXT,
 tipoDatoTupla, tipoDatoVARIABLE, tomaARCHIVO, VISIBILIDAD, VOID, ID;
 
-non terminal bucle;
-non terminal listas;
-non terminal mientras;
-non terminal pregunton;
-non terminal variableEntero;
-non terminal clase;
+non terminal Programa, Instrucciones, Instruccion, Expresion, 
+             Bloque, declIf, declWhile, declFor, Declaracion, declClase;
 
-bucle ::=
-    bucleCONTADOR parIZQ tipoDatoNUM ID puntoCOMA ID COMPARACION NUMERO puntoCOMA ID INCREDECRE parDER;
+precedence left operLOGICOS;
+precedence left COMPARACION;
+precedence left ARITMETICOS;
+precedence right INCREDECRE;
 
-listas ::=
-    tipoDatoLista corIZQ corDER ASIGNACION corIZQ corDER;
+Programa ::= Instrucciones;
 
-mientras ::=
-    preguntaCONDICIONAL parIZQ ID COMPARACION NUMERO parDER corIZQ corDER;
+Instrucciones ::= Instruccion Instrucciones | ;
 
-pregunton ::=
-    preguntaCONDICIONAL parIZQ ID COMPARACION NUMERO parDER corIZQ corDER sinoCONDICIONAL corIZQ corDER;
+Instruccion ::= 
+    Declaracion puntoCOMA
+    | declIf
+    | declWhile
+    | declFor
+    | declClase
+    | muestraTEXTO parIZQ Expresion parDER puntoCOMA  // Ejemplo: print(x);  print('Holamundo');
+    | Bloque
+    | Expresion puntoCOMA;
 
-variableEntero ::= 
-    tipoDatoNUM ID ASIGNACION NUMERO;
+Declaracion ::= 
+    tipoDatoNUM ID ASIGNACION Expresion                    // Ejemplo: int x = 5;
+    | tipoDatoNumDecimal ID ASIGNACION Expresion                // Ejemplo: float y = 3.14;
+    | tipoDatoBool ID ASIGNACION BOOLEANO                // Ejemplo: bool flag = true;
+    | tipoDatoTEXT ID ASIGNACION  Expresion            // Ejemplo: string mensaje = 'Hola';
+    | tipoDatoVARIABLE ID ASIGNACION Expresion;       //Ejemplo:  var z = x + y;   var z = 5;
 
-clase ::=
-    VISIBILIDAD CLASS ID corIZQ corDER;
+Bloque ::= llaveIZQ Instrucciones llaveDER;
+
+declClase ::=
+    VISIBILIDAD CLASS ID Bloque;     //Ejemplo: public class myclase {int x = 5;}
+
+declIf ::= 
+    preguntaCONDICIONAL parIZQ Expresion parDER Instruccion;   // Ejemplo: if (x > 5) { print(hola); }
+
+declWhile ::= preguntaWHILE parIZQ Expresion parDER Instruccion;  // Ejemplo: while (x < 10) { print(hola); }
+
+declFor ::= 
+    bucleCONTADOR parIZQ Declaracion puntoCOMA Expresion puntoCOMA Expresion parDER Instruccion;  // Ejemplo: for (int i = 0; i < 10; i++) { a + b; }
+
+Expresion ::= 
+    ID COMPARACION NUMERO
+    | COMILLA ID COMILLA
+    | ID ARITMETICOS ID
+    | ID BOOLEANO NUMERO
+    | ID INCREDECRE
+    | ID
+    | NUMERO;
