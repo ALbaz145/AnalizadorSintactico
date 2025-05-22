@@ -8,7 +8,7 @@ tipoDatoLista, tipoDatoNUM, tipoDatoNumDecimal, tipoDatoNUMERO, tipoDatoSET, tip
 tipoDatoTupla, tipoDatoVARIABLE, tomaARCHIVO, VISIBILIDAD, VOID, ID;
 
 non terminal Programa, Instrucciones, Instruccion, Expresion, 
-             Bloque, declIf, declWhile, declFor, Declaracion, declClase;
+             Bloque, declIf, declWhile, declFor, Declaracion, declClase, ctrlError;
 
 precedence left operLOGICOS;
 precedence left COMPARACION;
@@ -39,7 +39,7 @@ Declaracion ::=
 Bloque ::= llaveIZQ Instrucciones llaveDER;
 
 declClase ::=
-    VISIBILIDAD CLASS ID Bloque;     //Ejemplo: public class myclase {int x = 5;}
+    VISIBILIDAD CLASS ID Instruccion;     //Ejemplo: public class myclase {int x = 5;}
 
 declIf ::= 
     preguntaCONDICIONAL parIZQ Expresion parDER Instruccion;   // Ejemplo: if (x > 5) { print(hola); }
@@ -48,6 +48,9 @@ declWhile ::= preguntaWHILE parIZQ Expresion parDER Instruccion;  // Ejemplo: wh
 
 declFor ::= 
     bucleCONTADOR parIZQ Declaracion puntoCOMA Expresion puntoCOMA Expresion parDER Instruccion;  // Ejemplo: for (int i = 0; i < 10; i++) { a + b; }
+
+ctrlError ::=
+    intentaERROR Instruccion manejaERROR parIZQ ID parDER Instruccion;
 
 Expresion ::= 
     ID COMPARACION NUMERO

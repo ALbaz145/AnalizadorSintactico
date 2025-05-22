@@ -1,1 +1,5 @@
-public class myclase {int x = 5;}
+try {
+    int x = 5;
+} catch(cafe) {
+    int x = 5;
+}
