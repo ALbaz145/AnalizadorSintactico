@@ -1,2 +1,19 @@
-int x = 5;
-public class myclase {}
+import 'math';
+
+public class Calculadora {
+    int total = 0;
+    
+
+    func sumar(int a, int b) {
+        int x = 5;
+    }
+
+    func mostrar(int a, int b) {
+    if (x > 5) { print(hola); }        
+
+    }
+
+    func ejecutar(int a, int b) {
+        async func resolveAfter2Seconds(){}
+    }
+}

@@ -24,23 +24,20 @@ non terminal Programa, Importaciones, Importacion, Clases, Clase, Funciones, Fun
              asignaValor, declClase, ctrlError, declSwitch, 
              casosSwitch, declFunc, Parametros, imp, 
              declSync, cicloCADA, declArreglo, tipoDato, Elementos,
-             declEnum;
+             declEnum, BloqueClase, MiembrosClase, Miembro, Parametro;
 
 precedence left operLOGICOS;
 precedence left COMPARACION;
 precedence left ARITMETICOS;
 precedence right INCREDECRE;
 
-Programa ::= Importaciones Clases Funciones CuerpoInstrucciones;
+Programa ::= Importaciones Clases;
 
-Importaciones ::= Importacion Importaciones | ;
+Importaciones ::= | Importaciones Importacion;
 Importacion ::= imp;
 
-Clases ::= Clase Clases | ;
+Clases ::= | Clases Clase;
 Clase ::= declClase;
-
-Funciones ::= Funcion Funciones | ;
-Funcion ::= declFunc;
 
 CuerpoInstrucciones ::= Instruccion CuerpoInstrucciones | ;
 
@@ -59,7 +56,8 @@ Instruccion ::=
     | Bloque
     | Expresion puntoCOMA;
 
-Bloque ::= llaveIZQ CuerpoInstrucciones llaveDER;
+Bloque ::= 
+    llaveIZQ CuerpoInstrucciones llaveDER;
 
 Expresion ::= 
     Expresion operLOGICOS Expresion
@@ -84,7 +82,16 @@ asignaValor ::=
 
 
 declClase ::=
-    VISIBILIDAD CLASS ID Bloque;     //Ejemplo: public class myclase {int x = 5;}
+    VISIBILIDAD CLASS ID BloqueClase;     //Ejemplo: public class myclase {int x = 5;}
+
+BloqueClase ::= llaveIZQ MiembrosClase llaveDER;
+
+MiembrosClase ::= Miembro MiembrosClase | ;
+
+Miembro ::= Declaracion puntoCOMA 
+          | declFunc
+          | declArreglo
+          | declEnum;
 
 declIf ::= 
     preguntaCONDICIONAL parIZQ Expresion parDER Bloque;   // Ejemplo: if (x > 5) { print(hola); }
@@ -107,7 +114,8 @@ declFunc ::=
     defineFUNCION ID parIZQ Parametros parDER Bloque;  //Ejemplo: func suma(int a) {}
 
 Parametros ::=
-    Declaracion | Declaracion COMA Parametros;
+    Parametro | Parametro COMA Parametros;
+    Parametro ::= tipoDato ID;
 
 imp ::=
     IMPORTACION COMILLA ID COMILLA puntoCOMA;  //Ejemplo: import 'math';
