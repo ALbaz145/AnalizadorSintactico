@@ -11,7 +11,7 @@ public class Main {
             sintactico.parse();
             System.out.println("Análisis completado sin errores");
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 }

@@ -1,62 +1,131 @@
 import java_cup.runtime.*;
 
-terminal ARITMETICOS, ASIGNACION, BOOLEANO, bucleCONTADOR, casoCONDICIONAL, CHECADOR, CLASS, COMA, COMILLA, COMPARACION, controlBUCLE,
-corDER, corIZQ, defineESTRUCTURA, defineFUNCION, dosPUNTOS, ELIMINA, EMOJI, ESPERA, INCREDECRE, intentaERROR, llaveDER, llaveIZQ,
-manejaERROR, muestraTEXTO, NUMERO, NULO, operLOGICOS, parDER, parIZQ, preguntaCONDICIONAL, preguntaWHILE, puntoCOMA, rompeCONDICIONAL, seleccionCONDICIONAL,
-siguienteCICLO, sinoCONDICIONAL, tipoDatoArregloCorte, tipoDatoBool, tipoDatoByte, tipoDatoCaracter, tipoDatoENUM, tipoDatoINMU,
+parser code {:
+    public void report_error(String message, Object info) {
+        if (info instanceof Symbol) {
+            Symbol s = (Symbol) info;
+            int line = (s.left <= 0) ? 1 : s.left;
+            String token = (s.value == null) ? " " : s.value.toString();
+            System.err.println("ERROR sintáctico en línea " + line + ": Token inesperado '" + token + "'");
+        }
+    }
+:};
+
+terminal ARITMETICOS, ASIGNACION, BOOLEANO, bucleCONTADOR, casoCONDICIONAL, CHECADOR, CLASS, COMA, COMENTARIO, COMILLA, COMPARACION, controlBUCLE,
+corDER, corIZQ, defineESTRUCTURA, defineFUNCION, dosPUNTOS, ELIMINA, EMOJI, ESPERA, INCREDECRE, intentaERROR, INTERFAZ, IMPORTACION, llaveDER, llaveIZQ,
+manejaERROR, muestraTEXTO, NUMERO, NULO, operLOGICOS, PARA, parDER, parIZQ, preguntaCONDICIONAL, preguntaWHILE, PUNTO, puntoCOMA, RETORNA, rompeCONDICIONAL, seleccionCONDICIONAL,
+siguienteCICLO, sinoCONDICIONAL, STRING, tipoDatoArregloCorte, tipoDatoBool, tipoDatoByte, tipoDatoCaracter, tipoDatoENUM, tipoDatoINMU,
 tipoDatoLista, tipoDatoNUM, tipoDatoNumDecimal, tipoDatoNUMERO, tipoDatoSET, tipoDatoSetInmu, tipoDatoSimbolo, tipoDatoTEXT,
 tipoDatoTupla, tipoDatoVARIABLE, tomaARCHIVO, VISIBILIDAD, VOID, ID;
 
-non terminal Programa, Instrucciones, Instruccion, Expresion, 
-             Bloque, declIf, declWhile, declFor, Declaracion, declClase, ctrlError;
+non terminal Programa, Importaciones, Importacion, Clases, Clase, Funciones, Funcion,
+            CuerpoInstrucciones, Instruccion, Expresion,
+             Bloque, declIf, declWhile, declFor, Declaracion, 
+             asignaValor, declClase, ctrlError, declSwitch, 
+             casosSwitch, declFunc, Parametros, imp, 
+             declSync, cicloCADA, declArreglo, tipoDato, Elementos,
+             declEnum;
 
 precedence left operLOGICOS;
 precedence left COMPARACION;
 precedence left ARITMETICOS;
 precedence right INCREDECRE;
 
-Programa ::= Instrucciones;
+Programa ::= Importaciones Clases Funciones CuerpoInstrucciones;
 
-Instrucciones ::= Instruccion Instrucciones | ;
+Importaciones ::= Importacion Importaciones | ;
+Importacion ::= imp;
+
+Clases ::= Clase Clases | ;
+Clase ::= declClase;
+
+Funciones ::= Funcion Funciones | ;
+Funcion ::= declFunc;
+
+CuerpoInstrucciones ::= Instruccion CuerpoInstrucciones | ;
 
 Instruccion ::= 
     Declaracion puntoCOMA
+    | declSync
     | declIf
     | declWhile
     | declFor
-    | declClase
-    | muestraTEXTO parIZQ Expresion parDER puntoCOMA  // Ejemplo: print(x);  print('Holamundo');
+    | declArreglo
+    | declEnum
+    | cicloCADA
+    | ctrlError
+    | declSwitch
+    | muestraTEXTO Expresion puntoCOMA
     | Bloque
     | Expresion puntoCOMA;
 
-Declaracion ::= 
-    tipoDatoNUM ID ASIGNACION Expresion                    // Ejemplo: int x = 5;
-    | tipoDatoNumDecimal ID ASIGNACION Expresion                // Ejemplo: float y = 3.14;
-    | tipoDatoBool ID ASIGNACION BOOLEANO                // Ejemplo: bool flag = true;
-    | tipoDatoTEXT ID ASIGNACION  Expresion            // Ejemplo: string mensaje = 'Hola';
-    | tipoDatoVARIABLE ID ASIGNACION Expresion;       //Ejemplo:  var z = x + y;   var z = 5;
-
-Bloque ::= llaveIZQ Instrucciones llaveDER;
-
-declClase ::=
-    VISIBILIDAD CLASS ID Instruccion;     //Ejemplo: public class myclase {int x = 5;}
-
-declIf ::= 
-    preguntaCONDICIONAL parIZQ Expresion parDER Instruccion;   // Ejemplo: if (x > 5) { print(hola); }
-
-declWhile ::= preguntaWHILE parIZQ Expresion parDER Instruccion;  // Ejemplo: while (x < 10) { print(hola); }
-
-declFor ::= 
-    bucleCONTADOR parIZQ Declaracion puntoCOMA Expresion puntoCOMA Expresion parDER Instruccion;  // Ejemplo: for (int i = 0; i < 10; i++) { a + b; }
-
-ctrlError ::=
-    intentaERROR Instruccion manejaERROR parIZQ ID parDER Instruccion;
+Bloque ::= llaveIZQ CuerpoInstrucciones llaveDER;
 
 Expresion ::= 
-    ID COMPARACION NUMERO
-    | COMILLA ID COMILLA
-    | ID ARITMETICOS ID
-    | ID BOOLEANO NUMERO
+    Expresion operLOGICOS Expresion
+    | Expresion COMPARACION Expresion
+    | Expresion ARITMETICOS Expresion
     | ID INCREDECRE
+    | parIZQ Expresion parDER
     | ID
-    | NUMERO;
+    | STRING
+    | NUMERO
+    | BOOLEANO;
+
+Declaracion ::= 
+    tipoDatoNUM ID asignaValor                    // Ejemplo: int x = 5;
+    | tipoDatoNumDecimal ID asignaValor                // Ejemplo: float y = 3.14;
+    | tipoDatoBool ID ASIGNACION BOOLEANO                // Ejemplo: bool flag = true;
+    | tipoDatoTEXT ID asignaValor            // Ejemplo: string mensaje = 'Hola';
+    | tipoDatoVARIABLE ID asignaValor;       //Ejemplo:  var z = x + y;   var z = 5;
+
+asignaValor ::=
+    ASIGNACION Expresion | ;
+
+
+declClase ::=
+    VISIBILIDAD CLASS ID Bloque;     //Ejemplo: public class myclase {int x = 5;}
+
+declIf ::= 
+    preguntaCONDICIONAL parIZQ Expresion parDER Bloque;   // Ejemplo: if (x > 5) { print(hola); }
+
+declWhile ::= preguntaWHILE parIZQ Expresion parDER Bloque;  // Ejemplo: while (x < 10) { print(hola); }
+
+declFor ::= 
+    bucleCONTADOR parIZQ Declaracion puntoCOMA Expresion puntoCOMA Expresion parDER Bloque;  // Ejemplo: for (int i = 0; i < 10; i++) { a + b; }
+
+ctrlError ::=
+    intentaERROR Bloque manejaERROR Bloque;    //Ejemplo try {var z = x + y;} catch {print(error);}
+
+declSwitch ::=
+    seleccionCONDICIONAL parIZQ Expresion parDER llaveIZQ casosSwitch llaveDER;
+
+casosSwitch ::=
+    casoCONDICIONAL Expresion dosPUNTOS rompeCONDICIONAL puntoCOMA casosSwitch | ;
+
+declFunc ::=
+    defineFUNCION ID parIZQ Parametros parDER Bloque;  //Ejemplo: func suma(int a) {}
+
+Parametros ::=
+    Declaracion | Declaracion COMA Parametros;
+
+imp ::=
+    IMPORTACION COMILLA ID COMILLA puntoCOMA;  //Ejemplo: import 'math';
+
+declSync ::=
+    ESPERA defineFUNCION ID parIZQ parDER Bloque;  //Ejemplo: async func resolveAfter2Seconds(){}
+
+cicloCADA ::=
+    ID PUNTO PARA parIZQ ID parDER puntoCOMA; //Ejemplo: fruits.forEach(myFunction);
+
+declArreglo ::=
+    tipoDato corIZQ corDER ID ASIGNACION corIZQ Elementos corDER puntoCOMA;    //Ejemplo: int[] myNum = [10];
+
+tipoDato ::=
+    tipoDatoNUM | tipoDatoTEXT;
+
+Elementos ::=
+    Expresion | Expresion COMA Elementos; 
+
+declEnum ::=
+    tipoDatoENUM ID Bloque;     //Ejemplo: enum Direction { Up; Down; Left; Right;}

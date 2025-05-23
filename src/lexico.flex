@@ -3,9 +3,19 @@ import java_cup.runtime.Symbol;
 %%
 %public
 %class lexico
+%unicode
 %line
 %column
 %cup
+
+%{
+    private Symbol symbol(int type) {
+        int line = (yyline < 0) ? 1 : yyline + 1; // Si yyline es -1, usa línea 1
+        int column = (yycolumn < 0) ? 1 : yycolumn + 1;
+        return new Symbol(type, line, column, yytext());
+    }
+%}
+
 
 DIGITO = [0-9]
 LETRA = [a-zA-Z]
@@ -125,13 +135,32 @@ NUMERO = {DIGITO}+
 
 "'" {return new Symbol(sym.COMILLA);}
 
+"." {return new Symbol(sym.PUNTO);}
+
+"import" | "IMPORT" {return new Symbol(sym.IMPORTACION);}
+
+"return" | "RETURN" {return new Symbol(sym.RETORNA);}
+
+"interface" | "INTERFACE" {return new Symbol(sym.INTERFAZ);}
+
+\"([^\"\\]|\\.)*\" {return new Symbol(sym.STRING, yytext());}
+
+"forEach" | "foreach" {return new Symbol(sym.PARA);}
+
 {NUMERO} { return new Symbol(sym.NUMERO); }
 
 {ID} { return new Symbol(sym.ID); }
 
 {ESPACIO} { /* Se ignoran */ }
 
-.       {
-    System.err.println("Error léxico en línea " + (yyline + 1) + ", columna " + (yycolumn + 1) + ": Caracter no válido '" + yytext() + "'");
-    throw new Error("Token inválido");
+[ \t\n\r]+      { /* Ignorar */ }
+
+"//".*                             { /* ignora comentarios de línea */ }
+"/*"([^*]|[\\*][^/])*"*/"         { /* ignora comentarios multilínea */ }
+
+. {
+    System.err.println("ERROR léxico en línea " + (yyline + 1) + 
+                      ", columna " + (yycolumn + 1) + 
+                      ": Símbolo inválido '" + yytext() + "'");
+    return symbol(sym.error); // Token genérico de error
 }
