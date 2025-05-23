@@ -355,7 +355,7 @@ public class parser extends java_cup.runtime.lr_parser {
     public void report_error(String message, Object info) {
         if (info instanceof Symbol) {
             Symbol s = (Symbol) info;
-            int line = (s.left <= 0) ? 1 : s.left;
+            int line = s.left;
             String token = (s.value == null) ? " " : s.value.toString();
             System.err.println("ERROR sintáctico en línea " + line + ": Token inesperado '" + token + "'");
         }
