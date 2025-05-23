@@ -1,6 +1,7 @@
 import 'math';
 
 public class Calculadora {
+    enum Direction { Up; Down; Left; Right;}
     int total = 0;
     
 
@@ -12,6 +13,37 @@ public class Calculadora {
     }
 
     func mostrar(int a, int b) {
+        string mensaje = "Hola";
+    if (x > 5) { 
+        print(hola); 
+        }        
+
+    }
+
+    func ejecutar(int a, int b) {
+        async func resolveAfter2Seconds(){
+            bool flag = true;
+            while (x < 10) { 
+                print(hola); 
+                }
+        }
+    }
+}
+
+public class Hola {
+    enum Direction { Up; Down; Left; Right;}
+    int total = 0;
+    
+
+    func sumar(int a, int b) {
+        int x = 5;
+        for (int i = 0; i < 10; i++) { 
+            a + b; 
+            }
+    }
+
+    func mostrar(int a, int b) {
+        string mensaje = "Hola";
     if (x > 5) { 
         print(hola); 
         }        

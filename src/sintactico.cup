@@ -74,7 +74,7 @@ Declaracion ::=
     tipoDatoNUM ID asignaValor                    // Ejemplo: int x = 5;
     | tipoDatoNumDecimal ID asignaValor                // Ejemplo: float y = 3.14;
     | tipoDatoBool ID ASIGNACION BOOLEANO                // Ejemplo: bool flag = true;
-    | tipoDatoTEXT ID asignaValor            // Ejemplo: string mensaje = 'Hola';
+    | tipoDatoTEXT ID asignaValor            // Ejemplo: string mensaje = "Hola";
     | tipoDatoVARIABLE ID asignaValor;       //Ejemplo:  var z = x + y;   var z = 5;
 
 asignaValor ::=
