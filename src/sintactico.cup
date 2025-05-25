@@ -18,13 +18,13 @@ siguienteCICLO, sinoCONDICIONAL, STRING, tipoDatoArregloCorte, tipoDatoBool, tip
 tipoDatoLista, tipoDatoNUM, tipoDatoNumDecimal, tipoDatoNUMERO, tipoDatoSET, tipoDatoSetInmu, tipoDatoSimbolo, tipoDatoTEXT,
 tipoDatoTupla, tipoDatoVARIABLE, tomaARCHIVO, VISIBILIDAD, VOID, ID;
 
-non terminal Programa, Importaciones, Importacion, Clases, Clase, Funciones, Funcion,
-            CuerpoInstrucciones, Instruccion, Expresion,
-             Bloque, declIf, declWhile, declFor, Declaracion, 
-             asignaValor, declClase, ctrlError, declSwitch, 
-             casosSwitch, declFunc, Parametros, imp, 
+non terminal Programa, Importaciones, ImportacionM, Clases, ClaseM,
+            CuerpoInstrucciones, CuerpoInstruccionesM, Instruccion, Expresion, ExpresionComparacion, ExpresionAritmetica,
+             Bloque, declIf, declWhile, declFor, Declaracion, DeclaracionInt, DeclaracionIntM, DeclaracionFloat, DeclaracionFloatM,
+             DeclaracionBool, DeclaracionBoolM, DeclaracionString, DeclaracionStringM, DeclaracionVariable, DeclaracionVariableM,
+             declClase, ctrlError, declSwitch, casosSwitch, casosSwitchM, instruccionCase, declFunc, Parametros, imp, 
              declSync, cicloCADA, declArreglo, tipoDato, Elementos,
-             declEnum, BloqueClase, MiembrosClase, Miembro, Parametro;
+             declEnum, BloqueClase, MiembrosClase, MiembrosClaseM, Miembro, Parametro;
 
 precedence left operLOGICOS;
 precedence left COMPARACION;
@@ -33,14 +33,35 @@ precedence right INCREDECRE;
 
 Programa ::= Importaciones Clases;
 
-Importaciones ::= | Importaciones Importacion;
-Importacion ::= imp;
 
-Clases ::= | Clases Clase;
-Clase ::= declClase;
+//Importaciones
 
-CuerpoInstrucciones ::= Instruccion CuerpoInstrucciones | ;
+Importaciones ::= imp ImportacionM;
+ImportacionM ::= imp ImportacionM | ;
 
+imp ::= IMPORTACION STRING puntoCOMA;  //Ejemplo: import "math";
+
+
+//Clases
+
+Clases ::= declClase ClaseM; 
+ClaseM ::= declClase ClaseM | ;
+
+declClase ::= VISIBILIDAD CLASS ID BloqueClase;     //Ejemplo: public class myclase {int x = 5;}
+
+BloqueClase ::= llaveIZQ MiembrosClase llaveDER;
+
+MiembrosClase ::= MiembrosClaseM;
+MiembrosClaseM ::= Miembro MiembrosClaseM | ;
+Miembro ::= Declaracion puntoCOMA 
+          | declFunc
+          | declArreglo
+          | declEnum;
+
+//Lo demas
+
+CuerpoInstrucciones ::= CuerpoInstruccionesM;
+CuerpoInstruccionesM ::= | Instruccion CuerpoInstrucciones;
 Instruccion ::= 
     Declaracion puntoCOMA
     | declSync
@@ -52,46 +73,52 @@ Instruccion ::=
     | cicloCADA
     | ctrlError
     | declSwitch
-    | muestraTEXTO Expresion puntoCOMA
-    | Bloque
+    | muestraTEXTO parIZQ Expresion parDER puntoCOMA  //Ejemplo: print(hola);
     | Expresion puntoCOMA;
 
 Bloque ::= 
     llaveIZQ CuerpoInstrucciones llaveDER;
 
 Expresion ::= 
-    Expresion operLOGICOS Expresion
-    | Expresion COMPARACION Expresion
-    | Expresion ARITMETICOS Expresion
+    ExpresionComparacion
+    | ExpresionAritmetica
     | ID INCREDECRE
-    | parIZQ Expresion parDER
     | ID
     | STRING
     | NUMERO
     | BOOLEANO;
 
-Declaracion ::= 
-    tipoDatoNUM ID asignaValor                    // Ejemplo: int x = 5;
-    | tipoDatoNumDecimal ID asignaValor                // Ejemplo: float y = 3.14;
-    | tipoDatoBool ID ASIGNACION BOOLEANO                // Ejemplo: bool flag = true;
-    | tipoDatoTEXT ID asignaValor            // Ejemplo: string mensaje = "Hola";
-    | tipoDatoVARIABLE ID asignaValor;       //Ejemplo:  var z = x + y;   var z = 5;
+ExpresionComparacion ::= 
+    ID COMPARACION ID
+    | ID COMPARACION NUMERO
+    | NUMERO COMPARACION ID;
 
-asignaValor ::=
-    ASIGNACION Expresion | ;
+ExpresionAritmetica ::=
+    ID ARITMETICOS ID
+    | ID ARITMETICOS NUMERO
+    | NUMERO ARITMETICOS ID
+    | NUMERO ARITMETICOS NUMERO;
 
+Declaracion ::= DeclaracionInt
+                | DeclaracionFloat
+                | DeclaracionBool
+                | DeclaracionString
+                | DeclaracionVariable;
 
-declClase ::=
-    VISIBILIDAD CLASS ID BloqueClase;     //Ejemplo: public class myclase {int x = 5;}
+DeclaracionInt ::= tipoDatoNUM ID DeclaracionIntM;
+DeclaracionIntM ::= | ASIGNACION NUMERO;          //Ejemplo: int x = 6; 
 
-BloqueClase ::= llaveIZQ MiembrosClase llaveDER;
+DeclaracionFloat ::= tipoDatoNumDecimal ID DeclaracionFloatM;
+DeclaracionFloatM ::= | ASIGNACION NUMERO PUNTO NUMERO;    //Ejemplo: float y = 3.14;
 
-MiembrosClase ::= Miembro MiembrosClase | ;
+DeclaracionBool ::= tipoDatoBool ID DeclaracionBoolM;
+DeclaracionBoolM ::= | ASIGNACION BOOLEANO;               // Ejemplo: bool flag = true;
 
-Miembro ::= Declaracion puntoCOMA 
-          | declFunc
-          | declArreglo
-          | declEnum;
+DeclaracionString ::= tipoDatoTEXT ID DeclaracionStringM;
+DeclaracionStringM ::= | ASIGNACION STRING;   // Ejemplo: string mensaje = "Hola";
+
+DeclaracionVariable ::= tipoDatoVARIABLE ID DeclaracionVariableM;
+DeclaracionVariableM ::= | ASIGNACION Expresion;    //Ejemplo:  var z = x + y;   var z = 5;
 
 declIf ::= 
     preguntaCONDICIONAL parIZQ Expresion parDER Bloque;   // Ejemplo: if (x > 5) { print(hola); }
@@ -105,20 +132,22 @@ ctrlError ::=
     intentaERROR Bloque manejaERROR Bloque;    //Ejemplo try {var z = x + y;} catch {print(error);}
 
 declSwitch ::=
-    seleccionCONDICIONAL parIZQ Expresion parDER llaveIZQ casosSwitch llaveDER;
+    seleccionCONDICIONAL parIZQ Expresion parDER llaveIZQ casosSwitch llaveDER;   //Ejemplo: switch (expr) {case 1: print("El kilogramo de naranjas cuesta $0.59."); break;}
 
-casosSwitch ::=
-    casoCONDICIONAL Expresion dosPUNTOS rompeCONDICIONAL puntoCOMA casosSwitch | ;
+casosSwitch ::= instruccionCase casosSwitchM;
+casosSwitchM ::= instruccionCase casosSwitchM | ;
+instruccionCase ::= casoCONDICIONAL Expresion dosPUNTOS Instruccion rompeCONDICIONAL puntoCOMA;
 
 declFunc ::=
     defineFUNCION ID parIZQ Parametros parDER Bloque;  //Ejemplo: func suma(int a) {}
 
 Parametros ::=
     Parametro | Parametro COMA Parametros;
-    Parametro ::= tipoDato ID;
 
-imp ::=
-    IMPORTACION COMILLA ID COMILLA puntoCOMA;  //Ejemplo: import 'math';
+Parametro ::= tipoDato ID;
+
+tipoDato ::=
+    tipoDatoNUM | tipoDatoTEXT;
 
 declSync ::=
     ESPERA defineFUNCION ID parIZQ parDER Bloque;  //Ejemplo: async func resolveAfter2Seconds(){}
@@ -127,10 +156,7 @@ cicloCADA ::=
     ID PUNTO PARA parIZQ ID parDER puntoCOMA; //Ejemplo: fruits.forEach(myFunction);
 
 declArreglo ::=
-    tipoDato corIZQ corDER ID ASIGNACION corIZQ Elementos corDER puntoCOMA;    //Ejemplo: int[] myNum = [10];
-
-tipoDato ::=
-    tipoDatoNUM | tipoDatoTEXT;
+    tipoDato corIZQ corDER ID ASIGNACION corIZQ Elementos corDER puntoCOMA;    //Ejemplo: int[] myNum = [10,20];
 
 Elementos ::=
     Expresion | Expresion COMA Elementos; 

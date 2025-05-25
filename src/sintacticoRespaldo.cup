@@ -1,0 +1,160 @@
+import java_cup.runtime.*;
+
+parser code {:
+    public void report_error(String message, Object info) {
+        if (info instanceof Symbol) {
+            Symbol s = (Symbol) info;
+            int line = s.left;
+            String token = (s.value == null) ? " " : s.value.toString();
+            System.err.println("ERROR sintáctico en línea " + line + ": Token inesperado '" + token + "'");
+        }
+    }
+:};
+
+terminal ARITMETICOS, ASIGNACION, BOOLEANO, bucleCONTADOR, casoCONDICIONAL, CHECADOR, CLASS, COMA, COMENTARIO, COMILLA, COMPARACION, controlBUCLE,
+corDER, corIZQ, defineESTRUCTURA, defineFUNCION, dosPUNTOS, ELIMINA, EMOJI, ESPERA, INCREDECRE, intentaERROR, INTERFAZ, IMPORTACION, llaveDER, llaveIZQ,
+manejaERROR, muestraTEXTO, NUMERO, NULO, operLOGICOS, PARA, parDER, parIZQ, preguntaCONDICIONAL, preguntaWHILE, PUNTO, puntoCOMA, RETORNA, rompeCONDICIONAL, seleccionCONDICIONAL,
+siguienteCICLO, sinoCONDICIONAL, STRING, tipoDatoArregloCorte, tipoDatoBool, tipoDatoByte, tipoDatoCaracter, tipoDatoENUM, tipoDatoINMU,
+tipoDatoLista, tipoDatoNUM, tipoDatoNumDecimal, tipoDatoNUMERO, tipoDatoSET, tipoDatoSetInmu, tipoDatoSimbolo, tipoDatoTEXT,
+tipoDatoTupla, tipoDatoVARIABLE, tomaARCHIVO, VISIBILIDAD, VOID, ID;
+
+non terminal Programa, Importaciones, ImportacionM, Clases, ClaseM,
+            CuerpoInstrucciones, CuerpoInstruccionesM, Instruccion, Expresion, ExpresionComparacion, ExpresionAritmetica,
+             Bloque, declIf, declWhile, declFor, Declaracion, DeclaracionInt, DeclaracionIntM, DeclaracionFloat, DeclaracionFloatM,
+             DeclaracionBool, DeclaracionBoolM, DeclaracionString, DeclaracionStringM, DeclaracionVariable, DeclaracionVariableM,
+             declClase, ctrlError, declSwitch, casosSwitch, declFunc, Parametros, imp, 
+             declSync, cicloCADA, declArreglo, tipoDato, Elementos,
+             declEnum, BloqueClase, MiembrosClase, MiembrosClaseM, Miembro, Parametro;
+
+precedence left operLOGICOS;
+precedence left COMPARACION;
+precedence left ARITMETICOS;
+precedence right INCREDECRE;
+
+Programa ::= Importaciones Clases;
+
+Importaciones ::= ImportacionM;
+ImportacionM ::= imp ImportacionM | ;
+
+imp ::= IMPORTACION STRING puntoCOMA;  //Ejemplo: import "math";
+
+Clases ::= ClaseM; 
+ClaseM ::= declClase ClaseM | ;
+
+CuerpoInstrucciones ::= CuerpoInstruccionesM;
+CuerpoInstruccionesM ::= Instruccion CuerpoInstrucciones | ;
+
+Instruccion ::= 
+    Declaracion puntoCOMA
+    | declSync
+    | declIf
+    | declWhile
+    | declFor
+    | declArreglo
+    | declEnum
+    | cicloCADA
+    | ctrlError
+    | declSwitch
+    | muestraTEXTO parIZQ Expresion parDER puntoCOMA  //Ejemplo: print(hola);
+    | Bloque
+    | Expresion puntoCOMA;
+
+Bloque ::= 
+    llaveIZQ CuerpoInstrucciones llaveDER;
+
+Expresion ::= 
+    ExpresionComparacion
+    | ExpresionAritmetica
+    | ID INCREDECRE
+    | ID
+    | STRING
+    | NUMERO
+    | BOOLEANO;
+
+ExpresionComparacion ::= 
+    ID COMPARACION ID
+    | ID COMPARACION NUMERO
+    | NUMERO COMPARACION ID;
+
+ExpresionAritmetica ::=
+    ID ARITMETICOS ID
+    | ID ARITMETICOS NUMERO
+    | NUMERO ARITMETICOS ID
+    | NUMERO ARITMETICOS NUMERO;
+
+Declaracion ::= DeclaracionInt
+                | DeclaracionFloat
+                | DeclaracionBool
+                | DeclaracionString
+                | DeclaracionVariable;
+
+DeclaracionInt ::= tipoDatoNUM ID DeclaracionIntM;
+DeclaracionIntM ::= ASIGNACION NUMERO | ;
+
+DeclaracionFloat ::= tipoDatoNumDecimal ID DeclaracionFloatM;
+DeclaracionFloatM ::= ASIGNACION NUMERO PUNTO NUMERO | ;    //Ejemplo: float y = 3.14;
+
+DeclaracionBool ::= tipoDatoBool ID DeclaracionBoolM;
+DeclaracionBoolM ::= ASIGNACION BOOLEANO | ;               // Ejemplo: bool flag = true;
+
+DeclaracionString ::= tipoDatoTEXT ID DeclaracionStringM;
+DeclaracionStringM ::= ASIGNACION STRING | ;   // Ejemplo: string mensaje = "Hola";
+
+DeclaracionVariable ::= tipoDatoVARIABLE ID DeclaracionVariableM;
+DeclaracionVariableM ::= ASIGNACION Expresion | ;    //Ejemplo:  var z = x + y;   var z = 5;
+
+declClase ::=
+    VISIBILIDAD CLASS ID BloqueClase;     //Ejemplo: public class myclase {int x = 5;}
+
+BloqueClase ::= llaveIZQ MiembrosClase llaveDER;
+
+MiembrosClase ::= MiembrosClaseM;
+MiembrosClaseM ::= Miembro MiembrosClaseM | ;
+
+Miembro ::= Declaracion puntoCOMA 
+          | declFunc
+          | declArreglo
+          | declEnum;
+
+declIf ::= 
+    preguntaCONDICIONAL parIZQ Expresion parDER Bloque;   // Ejemplo: if (x > 5) { print(hola); }
+
+declWhile ::= preguntaWHILE parIZQ Expresion parDER Bloque;  // Ejemplo: while (x < 10) { print(hola); }
+
+declFor ::= 
+    bucleCONTADOR parIZQ Declaracion puntoCOMA Expresion puntoCOMA Expresion parDER Bloque;  // Ejemplo: for (int i = 0; i < 10; i++) { a + b; }
+
+ctrlError ::=
+    intentaERROR Bloque manejaERROR Bloque;    //Ejemplo try {var z = x + y;} catch {print(error);}
+
+declSwitch ::=
+    seleccionCONDICIONAL parIZQ Expresion parDER llaveIZQ casosSwitch llaveDER;
+
+casosSwitch ::=
+    casoCONDICIONAL Expresion dosPUNTOS rompeCONDICIONAL puntoCOMA casosSwitch | ;
+
+declFunc ::=
+    defineFUNCION ID parIZQ Parametros parDER Bloque;  //Ejemplo: func suma(int a) {}
+
+Parametros ::=
+    Parametro | Parametro COMA Parametros;
+
+Parametro ::= tipoDato ID;
+
+tipoDato ::=
+    tipoDatoNUM | tipoDatoTEXT;
+
+declSync ::=
+    ESPERA defineFUNCION ID parIZQ parDER Bloque;  //Ejemplo: async func resolveAfter2Seconds(){}
+
+cicloCADA ::=
+    ID PUNTO PARA parIZQ ID parDER puntoCOMA; //Ejemplo: fruits.forEach(myFunction);
+
+declArreglo ::=
+    tipoDato corIZQ corDER ID ASIGNACION corIZQ Elementos corDER puntoCOMA;    //Ejemplo: int[] myNum = [10,20];
+
+Elementos ::=
+    Expresion | Expresion COMA Elementos; 
+
+declEnum ::=
+    tipoDatoENUM ID Bloque;     //Ejemplo: enum Direction { Up; Down; Left; Right;}
